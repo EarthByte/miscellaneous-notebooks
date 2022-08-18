@@ -1,5 +1,10 @@
 # docker build -f Dockerfile -t misc .
 
+# if you are on Apple M1, try the commands below. I don't have an Apple M1 and haven't tried yet.
+# this may/may not work.
+# docker build -f Dockerfile --platform linux/amd64 -t misc .
+# docker run --rm -ti --platform linux/amd64 -p 8888:8888 misc
+
 FROM ubuntu:22.04
 
 #Install ubuntu libraires and packages
