@@ -1,6 +1,5 @@
 import pygplates
 import numpy as np
-from mpl_toolkits.basemap import Basemap
 
 
 def make_GPML_velocity_feature(Long,Lat):
