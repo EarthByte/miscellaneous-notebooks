@@ -1,6 +1,6 @@
+import cartopy.crs as ccrs
 import pygplates
 import numpy as np
-from mpl_toolkits.basemap import Basemap
 
 
 def make_GPML_velocity_feature(Long,Lat):
@@ -8,7 +8,7 @@ def make_GPML_velocity_feature(Long,Lat):
 # Long and Lat are assumed to be 1d arrays. 
 
     # Add points to a multipoint geometry
-    SeedPoints = zip(Lat,Long)
+    SeedPoints = list(zip(Lat,Long))
     points = []
     for j in range(0,len(SeedPoints)):
         points.append(SeedPoints[j])
@@ -134,6 +134,7 @@ def plot_velocities_and_topologies(pmap,
     # create a dateline wrapper object
     wrapper = pygplates.DateLineWrapper(lon0)
     
+    transform = ccrs.PlateCarree()
     # Iterate over the shared boundary sections.
     for shared_boundary_section in shared_boundary_sections:
     
@@ -143,43 +144,34 @@ def plot_velocities_and_topologies(pmap,
             for shared_sub_segment in shared_boundary_section.get_shared_sub_segments():
                 split_geometry = wrapper.wrap(shared_sub_segment.get_geometry())
                 for geometry in split_geometry:
-                    X=[]
-                    Y=[]
+                    x = []
+                    y = []
                     for point in geometry.get_points():
-                        X.append(point.get_longitude()),Y.append(point.get_latitude())
-                    x,y = pmap(X,Y)
-                    pmap.plot(x,y,'darkturquoise',clip_path=clip_path,linewidth=2,alpha=0.5, zorder=1)     
+                        x.append(point.get_longitude())
+                        y.append(point.get_latitude())
+                    pmap.plot(x, y, color='darkturquoise', linewidth=2, alpha=0.5, zorder=1, transform=transform)
     
         elif shared_boundary_section.get_feature().get_feature_type() == pygplates.FeatureType.create_gpml('SubductionZone'):
             for shared_sub_segment in shared_boundary_section.get_shared_sub_segments():
                 split_geometry = wrapper.wrap(shared_sub_segment.get_geometry())
                 for geometry in split_geometry:
-                    X=[]
-                    Y=[]
+                    x = []
+                    y = []
                     for point in geometry.get_points():
-                        X.append(point.get_longitude()),Y.append(point.get_latitude())
-                    x,y = pmap(X,Y)
-                pmap.plot(x,y,'k',clip_path=clip_path,linewidth=2,alpha=alpha, zorder=1)  
+                        x.append(point.get_longitude())
+                        y.append(point.get_latitude())
+                    pmap.plot(x, y, color='k', linewidth=2, alpha=alpha, zorder=1, transform=transform)
     
         else: #shared_boundary_section.get_feature().get_feature_type() == pygplates.FeatureType.create_gpml('FractureZone'):
             for shared_sub_segment in shared_boundary_section.get_shared_sub_segments():
                 split_geometry = wrapper.wrap(shared_sub_segment.get_geometry())
                 for geometry in split_geometry:
-                    X=[]
-                    Y=[]
+                    x = []
+                    y = []
                     for point in geometry.get_points():
-                        X.append(point.get_longitude()),Y.append(point.get_latitude())
-                    x,y = pmap(X,Y)
-                pmap.plot(x,y,'darkorange',clip_path=clip_path,linewidth=2,alpha=0.6, zorder=1)  
+                        x.append(point.get_longitude())
+                        y.append(point.get_latitude())
+                    pmap.plot(x, y, color='darkorange', linewidth=2, alpha=0.6, zorder=1, transform=transform)
     
     lons, lats = np.meshgrid(Xnodes,Ynodes)
-    # compute native x,y coordinates of grid.
-    x, y = pmap(lons, lats)
-    # define parallels and meridians to draw.
-    
-    uproj,vproj,xx,yy = \
-    pmap.transform_vector(u,v,Xnodes,Ynodes,54,26,returnxy=True,masked=True)
-    # now plot.
-    Q = pmap.quiver(xx,yy,uproj,vproj,scale=scale,clip_path=clip_path,alpha=alpha)
-    #Q2 = pmap.quiver(xx,yy,uproj,vproj,scale=scale,color='')
-    # make quiver key.
+    pmap.quiver(lons, lats, u, v, scale=scale, alpha=alpha, transform=transform)

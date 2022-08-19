@@ -2,9 +2,9 @@ import numpy as np
 import math
 
 def plate_isotherm_depth(age, temp, *vartuple) :
-    "Computes the depth to the temp - isotherm in a cooling plate mode.\
-    Solution by iteration. By default the plate thickness is 125 km as\
-    in Parsons/Sclater.  Change given a 3rd parameter."
+    """Computes the depth to the temp - isotherm in a cooling plate mode.
+    Solution by iteration. By default the plate thickness is 125 km as
+    in Parsons/Sclater.  Change given a 3rd parameter."""
 
     if len(vartuple) != 0 :
         PLATE_THICKNESS_KM = vartuple[0]
@@ -43,8 +43,8 @@ def plate_isotherm_depth(age, temp, *vartuple) :
     return z
 
 def plate_temp(age, z, PLATE_THICKNESS) :
-    "Computes the temperature in a cooling plate for age = t\
-    and at a depth = z."
+    """Computes the temperature in a cooling plate for age = t
+    and at a depth = z."""
 
     KAPPA = 0.804E-6
     T_MANTLE = 1350.0
