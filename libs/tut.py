@@ -56,7 +56,7 @@ class Tutorial(object):
         #
         #-----------Use pygplates to carry out the reconstruction 
         #
-        print(f'Reconstructing coastlines...{os.getcwd()}')
+        print(f'Reconstructing coastlines...')
         pygplates.reconstruct(
                 coastlines_filename, 
                 rotation_filenames, 
