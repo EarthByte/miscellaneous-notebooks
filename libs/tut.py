@@ -1,5 +1,6 @@
 import pygplates
-import sys
+import sys,os
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -33,26 +34,29 @@ rotation_filenames.append(data_root+'Global_EB_250-0Ma_GK07_Matthews_etal.rot')
 rotation_filenames.append(data_root+'Global_EB_410-250Ma_GK07_Matthews_etal.rot')
 
 # Base name of ouput file. 
-coastlines_output_basename = '/tmp/coastlines'
-continental_polygons_output_basename = '/tmp/continental'
-topology_output_basename = '/tmp/topology'
-fracture_zones_output_basename = '/tmp/fracture'
-magnetic_picks_output_basename = '/tmp/magnetic'
-cob_output_basename = '/tmp/cob'
-mineral_output_basename = '/tmp/mineral'
-mineral_AU_output_basename = '/tmp/mineral_au'
+coastlines_output_basename = './tmp/coastlines'
+continental_polygons_output_basename = './tmp/continental'
+topology_output_basename = './tmp/topology'
+fracture_zones_output_basename = './tmp/fracture'
+magnetic_picks_output_basename = './tmp/magnetic'
+cob_output_basename = './tmp/cob'
+mineral_output_basename = './tmp/mineral'
+mineral_AU_output_basename = './tmp/mineral_au'
 
 class Tutorial(object):
     def __init__(self):
         self.reconstruction_time = 0.
         self.anchor_plate = 0
         self.delta_time = 5.
+        Path("./tmp").mkdir(parents=True, exist_ok=True)
+        if not os.path.isdir('Data'):
+            raise Exception('The Data folder is not found! Try `ln -s ../data Data` in the "notebooks" folder.')
 
     def reconstruct_coastlines(self):
         #
         #-----------Use pygplates to carry out the reconstruction 
         #
-        print('Reconstructing coastlines...')
+        print(f'Reconstructing coastlines...{os.getcwd()}')
         pygplates.reconstruct(
                 coastlines_filename, 
                 rotation_filenames, 
@@ -136,7 +140,7 @@ class Tutorial(object):
     
     def plot_continental_polygons(self, ax, facecolor=None, edgecolor='none', alpha=0.1):
         print('Plotting continental polygons...')
-        shape_feature = ShapelyFeature(Reader(continental_polygons_output_basename).geometries(),
+        shape_feature = ShapelyFeature(Reader(continental_polygons_output_basename+'.shp').geometries(),
                                 ccrs.PlateCarree(), edgecolor=edgecolor)
         ax.add_feature(shape_feature,facecolor=facecolor, alpha=alpha)
 
@@ -145,7 +149,7 @@ class Tutorial(object):
     def plot_coastlines(self, ax, facecolor='default', edgecolor='k', alpha=0.4):
         print('Plotting coastlines...')
 
-        for record in Reader(coastlines_output_basename).records():
+        for record in Reader(coastlines_output_basename+'.shp').records():
             #print(record.attributes)
             fc = facecolor
             if facecolor == 'default':
@@ -158,7 +162,7 @@ class Tutorial(object):
     def plot_topologies(self, ax, facecolor='default', edgecolor='w', alpha=0.2):
         print('Plotting topologies...')
         
-        for record in Reader(topology_output_basename).records():
+        for record in Reader(topology_output_basename+'.shp').records():
             #print(record.attributes)
             fc = facecolor
             if facecolor == 'default':
@@ -172,14 +176,14 @@ class Tutorial(object):
         #plot the fracture zones
         print('Plotting fracture zones...')
         
-        for record in Reader(fracture_zones_output_basename).records():
+        for record in Reader(fracture_zones_output_basename+'.shp').records():
             #print(record.geometry)
             c=color
             if color == 'default':
                 c = plate_tectonic_utils.get_colour_by_plateid(int(record.attributes['PLATEID1']))
             
             if type(record.geometry) is MultiLineString:
-                for line in record.geometry:
+                for line in record.geometry.geoms:
                     lon, lat = line.xy
                     ax.plot(lon,lat,transform=ccrs.Geodetic(),color=c)
             else:
@@ -191,14 +195,14 @@ class Tutorial(object):
     def plot_continent_ocean_boundaries(self, ax, color='default'):
         #plot the continent_ocean_boundaries
         
-        for record in Reader(cob_output_basename).records():
+        for record in Reader(cob_output_basename+'.shp').records():
             #print(record.geometry)
             c = color
             if color == 'default':
                 c = plate_tectonic_utils.get_colour_by_plateid(int(record.attributes['PLATEID1']))
             
             if type(record.geometry) is MultiLineString:
-                for line in record.geometry:
+                for line in record.geometry.geoms:
                     lon, lat = line.xy
                     ax.plot(lon,lat,transform=ccrs.Geodetic(),color=c)
             else:
@@ -210,7 +214,7 @@ class Tutorial(object):
     
     def plot_magnetic_picks(self, ax, facecolors='none'):
         for i in range(1,5):
-            reader = Reader(f'{magnetic_picks_output_basename}_{i}')
+            reader = Reader(f'{magnetic_picks_output_basename}_{i}'+'.shp')
             #m.readshapefile(magnetic_picks_output_basename+'_{}'.format(i) ,'magnetic_{}'.format(i),drawbounds=False,color='w')
             import hashlib
             colors=[]
@@ -241,7 +245,7 @@ class Tutorial(object):
             
 
     def plot_mineral_deposits(self, ax, facecolors='none'):
-        reader = Reader(mineral_output_basename)
+        reader = Reader(mineral_output_basename+'.shp')
         
         ax.scatter(
                 [point.x for point in reader.geometries()],
@@ -252,7 +256,7 @@ class Tutorial(object):
                 s=30,
                 zorder=99)
         
-        reader_au = Reader(mineral_AU_output_basename)
+        reader_au = Reader(mineral_AU_output_basename+'.shp')
        
         ax.scatter(
                 [point.x for point in reader_au.geometries()],
