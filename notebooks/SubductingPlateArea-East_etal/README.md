@@ -16,17 +16,17 @@ Use conda/mamba environment
 
 These notebooks depends on some input files.
 
-- '../Data/Global_EarthByte_230-0Ma_GK07_AREPS.rot'
-- '../Data/Global_EarthByte_230-0Ma_GK07_AREPS_Coastlines.gpmlz'
-- '../Data/Global_EarthByte_230-0Ma_GK07_AREPS_PlateBoundaries.gpmlz'
-- '../Data/Global_EarthByte_230-0Ma_GK07_AREPS_Topology_BuildingBlocks.gpmlz'
-- '../Data/StaticPolygons/Global_EarthByte_GPlates_PresentDay_StaticPlatePolygons_2015_v1.shp'
+- ../Data/Global_EarthByte_230-0Ma_GK07_AREPS.rot
+- ../Data/Global_EarthByte_230-0Ma_GK07_AREPS_Coastlines.gpmlz
+- ../Data/Global_EarthByte_230-0Ma_GK07_AREPS_PlateBoundaries.gpmlz
+- ../Data/Global_EarthByte_230-0Ma_GK07_AREPS_Topology_BuildingBlocks.gpmlz
+- ../Data/StaticPolygons/Global_EarthByte_GPlates_PresentDay_StaticPlatePolygons_2015_v1.shp
 
 The above files have been checked into this repository. But you might want to use your own files. You may change the file paths in the notebooks accordingly.
 
-⚠⚠⚠These notebooks also need paleo age grids. These grids can be found here https://www.earthbyte.org/webdav/ftp/Data_Collections/Muller_etal_2016_AREPS/Muller_etal_2016_AREPS_Agegrids/Muller_etal_2016_AREPS_Agegrids_v1.17/Muller_etal_2016_AREPS_v1.17_netCDF.zip. You need to download the grids and put them in the "agegrids" folder. You can change the following line in the notebook1 to specify the location of age grids.
+⚠️⚠️⚠️These notebooks also need paleo age grids. These grids can be found here https://www.earthbyte.org/webdav/ftp/Data_Collections/Muller_etal_2016_AREPS/Muller_etal_2016_AREPS_Agegrids/Muller_etal_2016_AREPS_Agegrids_v1.17/Muller_etal_2016_AREPS_v1.17_netCDF.zip. You need to download the grids and put them in the "agegrids" folder. You can change the following line in the notebook1 to specify the location of age grids.
 
-'agegrids/Muller_etal_2019_Tectonics_v2.0_netCDF/Muller_etal_2019_Tectonics_v2.0_AgeGrid-','.nc'
+`'agegrids/Muller_etal_2019_Tectonics_v2.0_netCDF/Muller_etal_2019_Tectonics_v2.0_AgeGrid-','.nc'`
 
 ## References:
 
